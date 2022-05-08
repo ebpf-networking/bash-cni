@@ -52,7 +52,7 @@ installed yet.
 
 ## Install the bash-cni plugin
 
-You can pull the `cericwu/bashcni` image first. Or you could build your own image using the `docker build -t <your_image_name> .` command. Here we use the `cericwu/bashcni` image. Usually we don't need to pull the image. We use this step to make sure that you have access to the docker repository.
+You can pull the `cericwu/bashcni` image first. Or you could build your own image using the `docker build -t <your_image_name> .` command. Here we use the `cericwu/bashcni` image. Usually we don't need to pull the image. It is used here to make sure that you have access to the docker repository.
 
 ```
 $ docker login
