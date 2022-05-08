@@ -52,6 +52,17 @@ installed yet.
 
 ## Install the bash-cni plugin
 
+You can pull the "cericwu/bashcni" image first. Or you could build your own image using the Dockerfile with the "docker build -t <your_image_name> ." command. Here we use the "cericwu/bashcni" image.
+
+```
+$ docker login
+...
+Login Succeeded
+$ docker pull cericwu/bashcni
+...
+docker.io/cericwu/bashcni:latest
+```
+
 Run the 'kubectl apply -f bashcni-ds.yml' command to install the bash-cni plugin.
 
 ```
