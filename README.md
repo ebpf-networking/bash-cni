@@ -132,4 +132,4 @@ $ ls -l /opt/cni/bin/bash-cni
 ```
 
 This is because the bridge, iptables, and ip route entries remain unchanged
-after deleting the bashcni daemonset.
+after the bashcni daemonset is deleted.
