@@ -1,7 +1,7 @@
 # Setting up the bash-cni plugin in a Kubernetes cluster
 
-This is the bash-cni plugin with its DaemonSet to setup the bash-cni plugin in a kubernetes cluster
-automatically. The steps are listed below.
+This is the bash-cni plugin with its DaemonSet to setup the bash-cni plugin in a kubernetes cluster.
+The steps are listed below.
 
 ## Create a kubernetes cluster
 
