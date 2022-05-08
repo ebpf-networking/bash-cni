@@ -24,9 +24,9 @@ kubeadm join 192.168.122.135:6443 –-token rbmp1g.pg798r0cshk4qvbw \
         –-discovery-token-ca-cert-hash sha256:5888010a3c67f2842279e5a22c496e3945e6ff6678f0ccae8d4cf03a350de4c01
 ```
 
-## Run the "kubeadm join ..." command on worker nodes
+## Run the `kubeadm join ...` command on worker nodes
 
-Run the "kubeadm join ..." command on each node to join the cluster.
+Run the `kubeadm join ...` command on each node to join the cluster.
 
 ```
 $ sudo kubeadm join 192.168.122.135:6443 –-token rbmp1g.pg798r0cshk4qvbw \
@@ -38,7 +38,7 @@ Run 'kubectl get nodes' on the control-plane to see this node join the cluster.
 
 ## Check the cluster on the master node.
 
-Copy the configuration file to your ~/.kube directory and run the 'kubectl get nodes' command.
+Copy the configuration file to your `~/.kube` directory and run the `kubectl get nodes` command.
 
 ```
 $ mkdir -p $HOME/.kube
@@ -47,12 +47,12 @@ $ sudo chown $(id -u):$(id -g) $HOME/.kube/config
 $ kubectl get nodes
 ```
 
-The status of each node will be shown as "NotReady" at this point. It is because there is no CNI plugin
+The status of each node will be shown as `NotReady` at this point. It is because there is no CNI plugin
 installed yet.
 
 ## Install the bash-cni plugin
 
-You can pull the "cericwu/bashcni" image first. Or you could build your own image using the Dockerfile with the "docker build -t <your_image_name> ." command. Here we use the "cericwu/bashcni" image.
+You can pull the `cericwu/bashcni` image first. Or you could build your own image using the `docker build -t <your_image_name> .` command. Here we use the `cericwu/bashcni` image.
 
 ```
 $ docker login
@@ -63,7 +63,7 @@ $ docker pull cericwu/bashcni
 docker.io/cericwu/bashcni:latest
 ```
 
-Run the 'kubectl apply -f bashcni-ds.yml' command to install the bash-cni plugin.
+Run the `kubectl apply -f bashcni-ds.yml` command to install the bash-cni plugin.
 
 ```
 $ kubectl apply -f bashcni-ds.yml
@@ -78,9 +78,9 @@ $ ls -l /opt/cni/bin/bash-cni
 ```
 
 The output shows the bashcni daemonset is created with its service account and cluster role.
-The bash-cni configuration file 10-bash-cni-plugin.conf is automatically created
-and installed in the /etc/cni/net.d directory on each node.
-The bash-cni script is also installed in the /opt/cni/bin directory on each node.
+The bash-cni configuration file `10-bash-cni-plugin.conf` is automatically created
+and installed in the `/etc/cni/net.d` directory on each node.
+The bash-cni script is also installed in the `/opt/cni/bin` directory on each node.
 The daemonset pods are created in the namespace kube-system.
 We can run the following command to check on them.
 
