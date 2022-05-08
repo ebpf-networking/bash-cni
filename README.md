@@ -5,7 +5,7 @@ The steps are listed below.
 
 ## Create a kubernetes cluster
 
-Docker comes with the native cgroup driver cgroupfs on Ubuntu. Modify the `10-kubeadm.conf` file in the
+Docker comes with the native cgroup driver cgroupfs on Ubuntu 20.04 LTS. Modify the `10-kubeadm.conf` file in the
 `/etc/systemd/system/kubelet.service.d` directory on all VMs.  The `kubeadm init ...` command may fail on
 the master node if this is not corrected.
 
