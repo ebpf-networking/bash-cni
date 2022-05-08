@@ -108,7 +108,7 @@ monty-vm3   1/1    Running   0         5m   10.244.2.3   vm3
 pod1        1/1    Running   0         3m   10.244.2.4   vm3
 ```
 
-It shows the pods and their IP addresses.
+It shows that the pods are installed successfully with the bash-cni plugin. Their IP addresses are also listed in the output.
 
 ## Test the connectivities of the pods
 
