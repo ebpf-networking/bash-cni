@@ -59,7 +59,7 @@ spec:
         command:
         - cp
         args:
-        - -f
+        - /app/host-local
         - /app/bash-cni
         - /opt/cni/bin/bash-cni
         volumeMounts:
