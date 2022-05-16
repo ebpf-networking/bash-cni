@@ -74,13 +74,17 @@ daemonset.apps/bashcni created
 $ ls -l /etc/cni/net.d
 -rw-r--r-- 1 root root 138 May  6 11:42 10-bash-cni-plugin.conf
 $ ls -l /opt/cni/bin/bash-cni
--rwxr-xr-x 1 root root 3389 May  6 11:42 /opt/cni/bin/bash-cni
+-rwxr-xr-x 1 root root 3194 May  6 11:42 /opt/cni/bin/bash-cni
+$ ls -l /opt/cni/bin/host-local
+-rwxr-xr-x 1 root root 3614480 May  6 11:42 /opt/cni/bin/host-local
 ```
 
 The output shows the bashcni daemonset is created with its service account and cluster role.
 The bash-cni configuration file `10-bash-cni-plugin.conf` is automatically created
 and installed in the `/etc/cni/net.d` directory on each node.
-The bash-cni script is also installed in the `/opt/cni/bin` directory on each node.
+The bash-cni script is also installed in the `/opt/cni/bin` directory on each node. It uses
+the =host-local= plugin for IP Address Management (IPAM) instead of the =nmap= utility for
+generating IP addresses.
 The daemonset pods are created in the namespace `kube-system`.
 We can run the following command to check on them.
 
@@ -139,7 +143,9 @@ daemonset.apps "bashcni" deleted
 $ ls -l /etc/cni/net.d
 -rw-r--r-- 1 root root 138 May  6 11:42 10-bash-cni-plugin.conf
 $ ls -l /opt/cni/bin/bash-cni
--rwxr-xr-x 1 root root 3389 May  6 11:42 /opt/cni/bin/bash-cni
+-rwxr-xr-x 1 root root 3194 May  6 11:42 /opt/cni/bin/bash-cni
+$ ls -l /opt/cni/bin/host-local
+-rwxr-xr-x 1 root root 3614480 May  6 11:42 /opt/cni/bin/host-local
 ```
 
 This is because the bridge, iptables, and ip route entries remain unchanged
