@@ -83,7 +83,7 @@ The output shows the bashcni daemonset is created with its service account and c
 The bash-cni configuration file `10-bash-cni-plugin.conf` is automatically created
 and installed in the `/etc/cni/net.d` directory on each node.
 The bash-cni script is also installed in the `/opt/cni/bin` directory on each node. It uses
-the =host-local= plugin for IP Address Management (IPAM) instead of the =nmap= utility for
+the `host-local` plugin for IP Address Management (IPAM) instead of the `nmap` utility for
 generating IP addresses.
 The daemonset pods are created in the namespace `kube-system`.
 We can run the following command to check on them.
