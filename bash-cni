@@ -17,47 +17,22 @@ echo "CNI_PATH=$CNI_PATH"
 stdin=`cat /dev/stdin`
 echo "stdin: $stdin"
 
-allocate_ip(){
-	for ip in "${all_ips[@]}"
-	do
-		reserved=false
-		for reserved_ip in "${reserved_ips[@]}"
-		do
-			if [ "$ip" = "$reserved_ip" ]; then
-				reserved=true
-				break
-			fi
-		done
-		if [ "$reserved" = false ] ; then
-			echo "$ip" >> $IP_STORE
-			echo "$ip"
-			return
-		fi
-	done
-}
-
 case $CNI_COMMAND in
 ADD)
 	network=$(echo "$stdin" | jq -r ".network")
 	subnet=$(echo "$stdin" | jq -r ".subnet")
+	myname=$(echo "$stdin" | jq -r ".name")
 	subnet_mask_size=$(echo $subnet | awk -F  "/" '{print $2}')
 
-    echo "network=$network subnet=$subnet subnet_mask_size=$subnet_mask_size"
+    echo "network=$network subnet=$subnet subnet_mask_size=$subnet_mask_size name=$myname"
 
-	all_ips=$(nmap -sL $subnet | grep "Nmap scan report" | awk 'BEGIN {FS="[ ()]+"} {if ($NF != "") {print $NF} else {print $(NF - 1)}}')
-	all_ips=(${all_ips[@]})
-	skip_ip=${all_ips[0]}
-	gw_ip=${all_ips[1]}
-	reserved_ips=$(cat $IP_STORE 2> /dev/null || printf "$skip_ip\n$gw_ip\n") # reserving 10.244.0.0 and 10.244.0.1 
-	reserved_ips=(${reserved_ips[@]})
-	printf '%s\n' "${reserved_ips[@]}" > $IP_STORE
-	container_ip=$(allocate_ip)
-	echo "skip_ip=$skip_ip, gw_ip=$gw_ip"
-	echo "reserved_ips=${reserved_ips[@]}"
+    echo "step 0"
+	gw_ip=$(echo "$subnet" | awk -F"/" '{print $1}' | sed -e "s/0$/1/; t")
+	container_ip=$(echo "{\"cniVersion\": \"0.3.1\", \"type\": \"bash-cni\", \"name\": \"$myname\", \"ipam\": { \"type\": \"host-local\", \"subnet\": \"$subnet\" }}" | CNI_COMMAND=ADD CNI_CONTAINERID="$CNI_CONTAINERID" CNI_NETNS="$CNI_NETNS" CNI_IFNAME="$CNI_IFNAME" CNI_PATH="$CNI_PATH" /opt/cni/bin/host-local | jq -r '.ips[].address' | awk -F"/" '{print $1}')
+        echo $container_ip 
 
 	mkdir -p /var/run/netns/
 	ln -sfT $CNI_NETNS /var/run/netns/$CNI_CONTAINERID
-
 	rand1=$(tr -dc 'A-F0-9' < /dev/urandom | head -c4)
 	rand2=$(tr -dc 'A-F0-9' < /dev/urandom | head -c4)
 	host_if_name="veth$rand1"
@@ -108,10 +83,12 @@ echo "{
 ;;
 
 DEL)
+	dirname=$(echo "$stdin" | jq -r ".name")
+	tmpdir=/var/lib/cni/networks/$dirname
 	ip=$(ip netns exec $CNI_CONTAINERID ip addr show eth0 | awk '/inet / {print $2}' | sed  s%/.*%% || echo "")
 	if [ ! -z "$ip" ]
 	then
-		sed -i "/$ip/d" $IP_STORE
+		rm "$tmpdir"/"$ip"
 	fi
 ;;
 
