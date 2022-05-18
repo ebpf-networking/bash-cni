@@ -26,7 +26,7 @@ ADD)
 
     echo "network=$network subnet=$subnet subnet_mask_size=$subnet_mask_size name=$myname"
 
-    echo "step 0"
+    echo "`date`: step 0"
 	gw_ip=$(echo "$subnet" | awk -F"/" '{print $1}' | sed -e "s/0$/1/; t")
 	container_ip=$(echo "{\"cniVersion\": \"0.3.1\", \"type\": \"bash-cni\", \"name\": \"$myname\", \"ipam\": { \"type\": \"host-local\", \"subnet\": \"$subnet\" }}" | CNI_COMMAND=ADD CNI_CONTAINERID="$CNI_CONTAINERID" CNI_NETNS="$CNI_NETNS" CNI_IFNAME="$CNI_IFNAME" CNI_PATH="$CNI_PATH" /opt/cni/bin/host-local | jq -r '.ips[].address' | awk -F"/" '{print $1}')
         echo $container_ip 
@@ -37,27 +37,27 @@ ADD)
 	rand2=$(tr -dc 'A-F0-9' < /dev/urandom | head -c4)
 	host_if_name="veth$rand1"
 	guest_if_name="veth$rand2"
-    echo "step 1"
+    echo "`date`: step 1"
 	ip link add $guest_if_name type veth peer name $host_if_name 
 
-    echo "step 2"
+    echo "`date`: step 2"
 	ip link set $guest_if_name netns $CNI_CONTAINERID
 
-    echo "step 3"
+    echo "`date`: step 3"
     ip netns exec $CNI_CONTAINERID ip link set dev $guest_if_name down
     ip netns exec $CNI_CONTAINERID ip link set dev $guest_if_name name $CNI_IFNAME
     ip netns exec $CNI_CONTAINERID ip link set dev $CNI_IFNAME up
 
-    echo "step 4"
+    echo "`date`: step 4"
 	ip link set $host_if_name up 
 
-    echo "step 5"
+    echo "`date`: step 5"
 	ip link set $host_if_name master cni0 
 
-    echo "step 6"
+    echo "`date`: step 6"
 	ip netns exec $CNI_CONTAINERID ip addr add $container_ip/$subnet_mask_size dev $CNI_IFNAME
 
-    echo "step 7"
+    echo "`date`: step 7"
 	ip netns exec $CNI_CONTAINERID ip route add default via $gw_ip dev $CNI_IFNAME 
 
 	mac=$(ip netns exec $CNI_CONTAINERID ip link show eth0 | awk '/ether/ {print $2}')
@@ -79,6 +79,13 @@ echo "{
       }
   ]
 }" >&3
+
+    echo "`date`: step 8"
+
+    # These steps could be moved outside of cni later
+    mount bpffs /sys/fs/bpf -t bpf
+    ulimit -l unlimited
+    /opt/cni/xdp/xdp-loader load -p /sys/fs/bpf/$host_if_name -s xdp_stats $host_if_name /opt/cni/xdp/xdp_kern.o 
 
 ;;
 

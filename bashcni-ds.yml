@@ -55,18 +55,17 @@ spec:
       priorityClassName: system-node-critical
       initContainers:
       - name: install-cni-plugin
-        image: cericwu/bashcni
+        image: haih/bashcni
+        imagePullPolicy: Always
         command:
-        - cp
-        args:
-        - /app/bash-cni
-        - /opt/cni/bin/bash-cni
+        - /app/install.sh
         volumeMounts:
         - name: cni-plugin
-          mountPath: /opt/cni/bin
+          mountPath: /opt/cni
       containers:
       - name: bashcni
-        image: cericwu/bashcni
+        image: haih/bashcni
+        imagePullPolicy: Always
         securityContext:
           capabilities:
             add: ["NET_ADMIN"]
@@ -76,7 +75,7 @@ spec:
       volumes:
       - name: cni-plugin
         hostPath:
-          path: /opt/cni/bin
+          path: /opt/cni
       - name: cni
         hostPath:
           path: /etc/cni/net.d
