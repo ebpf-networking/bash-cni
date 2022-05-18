@@ -4,7 +4,6 @@ import (
     "fmt"
     "os"
     "os/exec"
-    "time"
     "strings"
 )
 
@@ -78,7 +77,7 @@ func main() {
     var match bool = false
     var done int = 0
     var index int = -1
-loop:
+
     args = []string{"-c", "kubectl get nodes -o json | jq -r '.items[].spec.podCIDR'"}
     output, err = runcmd("sh", args, true)
     if err != nil {
@@ -251,7 +250,4 @@ loop:
             }
         }
     }
-
-    time.Sleep(60 * time.Second)
-    goto loop
 }
