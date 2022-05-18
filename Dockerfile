@@ -5,7 +5,6 @@ COPY go.mod ./
 RUN go mod download
 COPY *.go ./
 COPY bash-cni ./
-COPY host-local ./
 COPY apiserver ./
 RUN go build -o /setup_bash
 RUN apk add --no-cache curl jq iptables
