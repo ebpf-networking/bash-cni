@@ -164,7 +164,7 @@ loop:
         args = []string{"link", "show", "cni0"}
         _, err = runcmd("ip", args, true)
         if err == nil {
-            args = []string{"-c", "ip link show cni0 | awk '/inet / {print $2}'"}
+            args = []string{"-c", "ip addr show cni0 | awk '/inet / {print $2}'"}
             output, err = runcmd("sh", args, true)
             tmpstr = strings.TrimSuffix(output, "\n")
             if err != nil {
