@@ -69,7 +69,7 @@ func bash_cni_paras(network string, subnet []string, addr [][]string, gwcidr str
 }
 
 func main() {
-    var output, fileName, network, cmdStr, ifname, gw_address, gw_cidr string
+    var output, fileName, network, cmdStr, ifname, tmpstr, gw_address, gw_cidr string
     var err error
     var numBytes int
     var args, out, subnet []string
@@ -164,10 +164,18 @@ loop:
         args = []string{"link", "show", "cni0"}
         _, err = runcmd("ip", args, true)
         if err == nil {
-            args = []string{"addr", "add", gw_cidr, "dev", "cni0"}
-            _, err = runcmd("ip", args, true)
+            args = []string{"-c", "ip link show cni0 | awk '/inet / {print $2}'"}
+            output, err = runcmd("sh", args, true)
+            tmpstr = strings.TrimSuffix(output, "\n")
             if err != nil {
-                fmt.Println("Error: add cni0 address" )
+                fmt.Println("Error: ip link show cni0 | awk '/inet / {print $2}'" )
+            }
+            if gw_cidr != tmpstr {
+                args = []string{"addr", "add", gw_cidr, "dev", "cni0"}
+                _, err = runcmd("ip", args, true)
+                if err != nil {
+                    fmt.Println("Error: add cni0 address" )
+                }
             }
         } else {
             // Add bridge cni0
