@@ -164,38 +164,30 @@ loop:
         args = []string{"link", "show", "cni0"}
         _, err = runcmd("ip", args, true)
         if err == nil {
-            fmt.Println("Device cni0 exists. Delete it." )
-            args = []string{"link", "set", "cni0", "down"}
+            args = []string{"addr", "add", gw_cidr, "dev", "cni0"}
             _, err = runcmd("ip", args, true)
             if err != nil {
-                fmt.Println("Error: bring down cni0" )
+                fmt.Println("Error: add cni0 address" )
             }
-            // Delete bridge cni0
-            args = []string{"link", "delete", "cni0"}
+        } else {
+            // Add bridge cni0
+            args = []string{"link", "add", "cni0", "type", "bridge"}
             _, err = runcmd("ip", args, true)
             if err != nil {
-                fmt.Println("Error: delete cni0" )
+                fmt.Println("Error: create cni0" )
+            }
+            args = []string{"link", "set", "cni0", "up"}
+            _, err = runcmd("ip", args, true)
+            if err != nil {
+                fmt.Println("Error: bringup cni0" )
+            }
+            args = []string{"addr", "add", gw_cidr, "dev", "cni0"}
+            _, err = runcmd("ip", args, true)
+            if err != nil {
+                fmt.Println("Error: add cni0 address" )
             }
         }
 
-        // Add bridge cni0
-        args = []string{"link", "add", "cni0", "type", "bridge"}
-        _, err = runcmd("ip", args, true)
-        if err != nil {
-            fmt.Println("Error: create cni0" )
-        }
-        args = []string{"link", "set", "cni0", "up"}
-        _, err = runcmd("ip", args, true)
-        if err != nil {
-            fmt.Println("Error: bringup cni0" )
-        }
-
-        args = []string{"addr", "add", gw_cidr, "dev", "cni0"}
-        _, err = runcmd("ip", args, true)
-        if err != nil {
-            fmt.Println("Error: add cni0 address" )
-        }
-    
         // Add iptables entries
         cmdStr = fmt.Sprintf("iptables -t filter -A FORWARD -s %s -j ACCEPT", network)
         args = []string{"-c", cmdStr}
