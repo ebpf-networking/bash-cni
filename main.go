@@ -78,6 +78,7 @@ func main() {
     var done int = 0
     var index int = -1
 
+loop:
     args = []string{"-c", "kubectl get nodes -o json | jq -r '.items[].spec.podCIDR'"}
     output, err = runcmd("sh", args, true)
     if err != nil {
@@ -194,13 +195,6 @@ func main() {
         if err != nil {
             fmt.Println("Error: add cni0 address" )
         }
-
-        // Reset iptables
-        args = []string{"-c", "iptables -F && iptables -t nat -F && iptables -t mangle -F && iptables -X"}
-        _, err = runcmd("sh", args, true)
-        if err != nil {
-            fmt.Println("Error: iptables -F && iptables -t nat -F && iptables -t mangle -F && iptables -X")
-        }
     
         // Add iptables entries
         cmdStr = fmt.Sprintf("iptables -t filter -A FORWARD -s %s -j ACCEPT", network)
@@ -250,4 +244,11 @@ func main() {
             }
         }
     }
+    
+    args = []string{"-c", "kubectl get nodes -w"}
+    output, err = runcmd("sh", args, true)
+    if err != nil {
+        fmt.Println("Error:", output)
+    }
+    goto loop
 }
