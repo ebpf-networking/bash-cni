@@ -1,9 +1,12 @@
 name: CI build
 
 on:
-  push:
-    branches:
-      - main
+  workflow_dispatch:
+    inputs:
+      branch:
+        description: 'branch we want to build from'
+        required: false
+        default: 'main'
 
 jobs:
   build:
@@ -12,6 +15,7 @@ jobs:
     - uses: actions/checkout@v2
       with:
         submodules: recursive
+        ref: ${{ github.event.inputs.branch }}
     - run: |
         echo "VERSION=$(git rev-parse --short HEAD)" >> $GITHUB_ENV
     - uses: docker/setup-buildx-action@v2
