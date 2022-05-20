@@ -26,4 +26,4 @@ jobs:
     - uses: docker/build-push-action@v3
       with:
         push: true
-        tags: haih/bashcni:latest,haih/bashcni:${{ env.VERSION }}
+        tags: cericwu/bashcni:latest,cericwu/bashcni:${{ env.VERSION }}

@@ -55,7 +55,7 @@ spec:
       priorityClassName: system-node-critical
       initContainers:
       - name: install-cni-plugin
-        image: haih/bashcni
+        image: cericwu/bashcni
         imagePullPolicy: Always
         command:
         - /app/install.sh
@@ -64,7 +64,7 @@ spec:
           mountPath: /opt/cni
       containers:
       - name: bashcni
-        image: haih/bashcni
+        image: cericwu/bashcni
         imagePullPolicy: Always
         securityContext:
           capabilities:
