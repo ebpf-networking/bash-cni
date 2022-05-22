@@ -5,8 +5,6 @@ if [[ ${DEBUG} -gt 0 ]]; then set -x; fi
 exec 3>&1 # make stdout available as fd 3 for the result
 exec &>> /var/log/bash-cni-plugin.log
 
-IP_STORE=/tmp/reserved_ips # all reserved ips will be stored there
-
 echo "CNI command: $CNI_COMMAND" 
 echo "CNI_NETNS=$CNI_NETNS"
 echo "CNI_CONTAINERID=$CNI_CONTAINERID"
