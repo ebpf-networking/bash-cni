@@ -12,7 +12,6 @@ plugin.
 
 ```
 $ echo "{\"cniVersion\": \"0.3.1\", \"type\": \"bash-cni\", \"name\": \"$myname\", \"ipam\": { \"type\":  \"host-local\", \"subnet\": \"$subnet\" }}" | CNI_COMMAND=ADD CNI_CONTAINERID=$CNI_CONTAINERID CNI_NETNS=$CNI_NETNS CNI_IFNAME=$CNI_IFNAME CNI_PATH=/opt/cni/bin /opt/cni/bin/bridge
-// Add " --cgroup-driver=cgroupfs" to the end of the environment variable
 {
     "cniVersion": "0.3.1",
     "interfaces": [
