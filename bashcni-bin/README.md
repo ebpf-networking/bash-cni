@@ -1,7 +1,7 @@
 # Replace the bash-cni shell script with bash-cni executable
 
 This is to replace the bash-cni shell script with a bash-cni executable. The bash-cni shell script uses nmap and jq,
-which need to be installed in all cluster nodes first. The new bash-cni executable was written in go. It does not
+which need to be installed in all cluster nodes first. The new bash-cni executable is written in go. It does not
 need either nmap or jq for execution.
 
 ## Use the bridge plugin
@@ -63,3 +63,9 @@ The code becomes much simpler using the bridge plugin. The steps for ADD include
 - Read the configuration file to get network CIDR, subnet CIDR, and the name. The name is `mynet`.
 - Get the container IP address.
 - Delete the entry in the `/var/lib/cni/networks/mynet` directory, which is managed by the host-local plugin.
+
+## Log file and directory managed by the `host-local` plugin
+
+The log file is located at `/var/log/bash-cni-plugin.log`. It is the same as the log file of the bash-cni shell script. 
+The directory managed by the `host-local` plugin is `/var/lib/cni/networks/mynet`, where `mynet` is defined as `name` in the configuration file
+`/etc/cni/net.d/10-bash-cni-plugin.conf`.
