@@ -1,11 +1,9 @@
 # Setting up the bash-cni plugin in a Kubernetes cluster
 
 This is the bash-cni plugin with its DaemonSet to setup the bash-cni plugin in a kubernetes cluster. It uses the 
-`host-local` plugin as IP Address Management (IPAM) instead of the `nmap` utility for generating IP addresses. 
-The daemonset can copy the required `host-local` plugin to the host VM, but it cannot install the `nmap` utility  
-or the JSON processor `jq` for the host VM. The `host-local` plugin also runs faster than the `nmap` utility. 
-All VM nodes need to install `jq` using the `sudo apt install jq` command before installing the bash-cni plugin.
-The steps are listed below.
+`bridge` plugin to create veth pairs between the bridge and the containers. The `bridge` plugin calls the `host-local` plugin for 
+IP Address Management (IPAM) to generate IP addresses. There is no dependency on nmap or jq, as the bash-cni shell script does.
+The `host-local` plugin also runs much faster than the `nmap` utility. The steps are listed below.
 
 ## Create a cluster
 
