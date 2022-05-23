@@ -142,7 +142,7 @@ func main() {
         hostdev = string(output[index+1:idx])
         index, idx = index2At(output, "\"", 29)
         guestmac = string(output[index+1:idx])
-        Log.Println(gw_ip, gw_cidr, container_ip, guestmac)
+        Log.Println(gw_ip, gw_cidr, hostdev, container_ip, guestmac)
 
         // Add the ip route entry for the container via the gateway
         cmdStr = fmt.Sprintf("ip netns exec %s ip route add default via %s dev %s", cni_containerid, gw_ip, cni_ifname)
