@@ -79,7 +79,7 @@ func index2At(str, sub string, n int) (int, int) {
 func main() {
     var output, network, subnet, cmdStr, myname, gw_ip, gw_cidr, con_cidr, container_ip string
     var out, args []string
-    var ipaddr, guestmac string
+    var ipaddr, hostdev, guestmac string
     var index, idx int
     var err error
 
@@ -138,8 +138,8 @@ func main() {
         con_cidr = string(output[index+1:idx])
         out = strings.Split(con_cidr, "/")
         container_ip = out[0]
-        // index, idx = index2At(output, "\"", 17)
-        // hostdev = string(output[index+1:idx])
+        index, idx = index2At(output, "\"", 17)
+        hostdev = string(output[index+1:idx])
         index, idx = index2At(output, "\"", 29)
         guestmac = string(output[index+1:idx])
         Log.Println(gw_ip, gw_cidr, container_ip, guestmac)
@@ -155,6 +155,24 @@ func main() {
         // Output the needed information through stdout
         cmdStr = fmt.Sprintf("{\n    \"cniVersion\": \"0.3.1\",\n    \"interfaces\": [\n        {\n            \"name\": \"eth0\",\n            \"mac\": \"%s\",\n            \"sandbox\": \"%s\"\n        }\n    ],\n    \"ips\": [\n        {\n            \"version\": \"4\",\n            \"address\": \"%s/%s\",\n            \"gateway\": \"%s\",\n            \"interface\": 0\n        }\n    ]\n}", guestmac, cni_netns, container_ip, mask_size, gw_ip)
         fmt.Println(cmdStr)
+        
+        // Mount /sys/fs/bpf and add XDP code
+        args = []string{"-c", "mount -t bpf bpffs /sys/fs/bpf"}
+        output, err = runcmd("sh", args, true)
+        if err != nil {
+            Log.Println("Error: mount -t bpf bpffs /sys/fs/bpf", output)
+        }
+        args = []string{"-c", "ulimit -l unlimited"}
+        output, err = runcmd("sh", args, true)
+        if err != nil {
+            Log.Println("Error: ulimit -l unlimited", output)
+        }
+        cmdStr = fmt.Sprintf("/opt/cni/xdp/xdp-loader load -p /sys/fs/bpf/%s -s xdp_stats %s /opt/cni/xdp/xdp_kern.o", hostdev, hostdev)
+        args = []string{"-c", cmdStr}
+        output, err = runcmd("sh", args, true)
+        if err != nil {
+            Log.Println("Error: xdp-loader load", output)
+        }
     case "DEL":
         cmdStr = fmt.Sprintf("cat %s", filename)
         args = []string{"-c", cmdStr}
