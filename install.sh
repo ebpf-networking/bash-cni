@@ -1,6 +1,6 @@
 #!/bin/sh
 
-cp /app/bash-cni /opt/cni/bin/bash-cni
+cp /bash-cni /opt/cni/bin/bash-cni
 
 mkdir -p /opt/cni/xdp
 cp /app/xdp-loader /opt/cni/xdp
