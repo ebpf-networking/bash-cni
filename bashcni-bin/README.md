@@ -7,7 +7,7 @@ need either nmap or jq for execution.
 ## Use the bridge plugin
 
 The bash-cni executable uses the bridge plugin to create the cni0 bridge, if necessary. It then calls the
-host-local plugin for IP Address Management (IPAM). VMs.  The code below shows an example of using the bridge
+host-local plugin for IP Address Management (IPAM). The code below shows an example of using the bridge
 plugin.
 
 ```
