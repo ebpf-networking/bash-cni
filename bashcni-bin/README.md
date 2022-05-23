@@ -44,7 +44,7 @@ $ echo "{\"cniVersion\": \"0.3.1\", \"type\": \"bash-cni\", \"name\": \"$myname\
 The host-local plugin provides the address `10.244.0.3` for the newly created container. It also shows that
 the gateway IP address is `10.244.0.1`.
 
-The advantages of using go and the bridge plugin include the following:
+The bridge plugin creates the veth pairs between the bridge and the containers. The advantages of using go and the bridge plugin include the following:
 - It calls the host-local plugin for IPAM.
 - It eliminates most of the ip commands.
 - There is no dependency on nmap or jq.
