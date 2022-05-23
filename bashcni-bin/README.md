@@ -50,7 +50,7 @@ The bridge plugin creates the veth pairs between the bridge and the containers. 
 - There is no dependency on nmap or jq.
 - The speed is drastically improved.
 
-## The steps for CNI_COMMAND ADD
+## The steps for ADD
 
 The code becomes much simpler using the bridge plugin. The steps for ADD include
 - Read the configuration file `/etc/cni/net.d/10-bash-cni-plugin.conf`, which is created by the daemonset for each node. We get the network CIDR, subnet CIDR, and name from the configuration file.
@@ -58,7 +58,7 @@ The code becomes much simpler using the bridge plugin. The steps for ADD include
 - Add an `ip route` entry in the container.
 - Output the needed information to stdout.
 
-## The steps for CNI_COMMAND DEL
+## The steps for DEL
 
 - Read the configuration file to get network CIDR, subnet CIDR, and the name. The name is `mynet`.
 - Get the container IP address.
