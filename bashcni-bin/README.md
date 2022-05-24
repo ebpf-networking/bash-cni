@@ -48,6 +48,7 @@ The bridge plugin creates the veth pairs between the bridge and the containers. 
 - It calls the host-local plugin for IPAM.
 - It eliminates most of the ip commands.
 - There is no dependency on nmap or jq.
+- The log file /var/log/bash-cni-plugin.log gives timestamps.
 - The speed is drastically improved.
 
 ## The steps for ADD
