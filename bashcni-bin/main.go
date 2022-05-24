@@ -157,10 +157,14 @@ func main() {
         fmt.Println(cmdStr)
         
         // Mount /sys/fs/bpf and add XDP code
-        args = []string{"-c", "mount -t bpf bpffs /sys/fs/bpf"}
-        output, err = runcmd("sh", args, true)
-        if err != nil {
-            Log.Println("Error: mount -t bpf bpffs /sys/fs/bpf", output)
+        args = []string{"-s", "/sys/fs/bpf", "/proc/mounts"}
+        output, err = runcmd("grep", args, true)
+        if err != nil && len(output) == 0 {
+            args = []string{"-t", "bpf", "bpffs", "/sys/fs/bpf"}
+            output, err = runcmd("mount", args, true)
+            if err != nil {
+                Log.Println("Error: mount -t bpf bpffs /sys/fs/bpf", output)
+            }
         }
         args = []string{"-c", "ulimit -l unlimited"}
         output, err = runcmd("sh", args, true)
