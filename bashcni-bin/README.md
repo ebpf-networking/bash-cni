@@ -55,7 +55,7 @@ The bridge plugin creates the veth pairs between the bridge and the containers. 
 
 The code becomes much simpler using the bridge plugin. The steps for ADD include
 - Read the configuration file `/etc/cni/net.d/10-bash-cni-plugin.conf`, which is created by the daemonset for each node. We get the network CIDR, subnet CIDR, and name from the configuration file.
-- Call the bridge plugin. It provides the guest interface MAC address, container IP address, and gateway IP address.
+- Call the bridge plugin. It provides the host interface name, guest interface MAC address, container IP address, and gateway IP address.
 - Add an `ip route` entry in the container.
 - Output the needed information to stdout.
 
