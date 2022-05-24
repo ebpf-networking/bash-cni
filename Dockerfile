@@ -12,6 +12,7 @@ COPY bashcni-bin/go.mod ./
 COPY bashcni-bin/*.go ./
 RUN go build -o /bash-cni
 COPY bridge /bridge
+RUN chmod +x /bridge
 RUN apk add --no-cache curl jq iptables
 RUN curl -LO https://storage.googleapis.com/kubernetes-release/release/`curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt`/bin/linux/amd64/kubectl \
     && chmod +x kubectl \
