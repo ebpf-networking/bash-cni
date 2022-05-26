@@ -3,7 +3,6 @@ package main
 import (
     "fmt"
     "log"
-    "time"
     "os"
     "os/exec"
     "strings"
