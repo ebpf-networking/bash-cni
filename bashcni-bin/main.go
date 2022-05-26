@@ -21,7 +21,7 @@ func init() {
         panic(err)
     }
 //    defer file.Close()
-    Log = log.New(file, "", log.LstdFlags|log.Lshortfile)
+    Log = log.New(file, "", log.LstdFlags | log.Lmicroseconds | log.Lshortfile)
 }
 
 func runcmd(path string, args []string, debug bool) (output string, err error) {
@@ -84,8 +84,7 @@ func main() {
     var err error
 
     getenv()
-    now := time.Now()
-    Log.Println(cni_command, "Start:", now.String())
+    Log.Println(cni_command, "Start")
 
     filename := "/etc/cni/net.d/10-bash-cni-plugin.conf"
     datadir  := "/var/lib/cni/networks"
@@ -205,6 +204,5 @@ func main() {
     case "GET":
     default:
     }
-    now = time.Now()
-    Log.Println(cni_command, "End:", now.String())
+    Log.Println(cni_command, "End")
 }
