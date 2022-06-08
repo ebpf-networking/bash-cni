@@ -209,7 +209,7 @@ loop:
         if err != nil {
             fmt.Println("Error:", cmdStr) 
         }
-        cmdStr = fmt.Sprintf("iptables -t nat -A POSTROUTING -s %s ! -o cni0 -j MASQUERADE", subnet[index])
+        cmdStr = fmt.Sprintf("iptables -t nat -A POSTROUTING -s %s ! -d %s ! -o cni0 -j MASQUERADE", subnet[index], network)
         args = []string{"-c", cmdStr}
         _, err = runcmd("sh", args, true)
         if err != nil {
