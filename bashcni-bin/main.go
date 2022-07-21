@@ -118,6 +118,12 @@ func main() {
         gw_cidr = gw_ip + "/" + mask_size
 
         // Link cni_netns to /var/run/netns
+        cmdStr = fmt.Sprintf("mkdir -p /var/run/netns")
+        args = []string{"-c", cmdStr}
+        output, err = runcmd("sh", args, true)
+        if err != nil {
+            Log.Println("Error: ln -sfT", output)
+        }
         cmdStr = fmt.Sprintf("ln -sfT %s /var/run/netns/%s", cni_netns, cni_containerid)
         args = []string{"-c", cmdStr}
         output, err = runcmd("sh", args, true)
